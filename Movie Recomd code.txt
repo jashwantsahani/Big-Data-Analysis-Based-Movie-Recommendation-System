@@ -1,0 +1,41 @@
+import pandas as pd 
+column_names = ['user_id', 'item_id', 'rating', 'timestamp'] 
+df = pd.read_csv("C:/Users/Admin/Desktop/data11.txt", sep='\t', names=column_names) 
+df.head()
+
+# Check out all the movies and their respective IDs 
+movie_titles = pd.read_csv("C:/Users/Admin/Desktop/Movie_Id_Titles.csv")
+movie_titles.head() 
+data = pd.merge(df, movie_titles, on='item_id') 
+data.head() 
+
+# Calculate mean rating of all movies 
+data.groupby('title')['rating'].mean().sort_values(ascending=False).head() 
+
+# Calculate count rating of all movies 
+data.groupby('title')['rating'].count().sort_values(ascending=False).head() 
+
+# creating dataframe with 'rating' count values 
+ratings = pd.DataFrame(data.groupby('title')['rating'].mean())   
+ratings['num of ratings'] = pd.DataFrame(data.groupby('title')['rating'].count())   
+ratings.head() 
+ 
+
+# plot graph of 'ratings' column 
+plt.figure(figsize =(10, 4)) 
+ratings['rating'].hist(bins = 70) 
+
+
+# Sorting values according to the 'num of rating column' 
+moviemat = data.pivot_table(index ='user_id', 
+              columns ='title', values ='rating')   
+moviemat.head()  
+ratings.sort_values('num of ratings', ascending = False).head(10)
+
+
+
+
+
+
+
+
